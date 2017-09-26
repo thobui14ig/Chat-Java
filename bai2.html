@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+
+<script>
+	var db = openDatabase("mydb", "1.0", "My First DB", 5 * 1024 * 1024)
+	db.transaction(function (tx) {
+	tx.executeSql("INSERT INTO CUSTOMERS (id, name) VALUES (?,?)", [1,"peter"]);
+	tx.executeSql("INSERT INTO CUSTOMERS (id, name) VALUES (?,?)", [2,"pa"]);
+		tx.executeSql("INSERT INTO CUSTOMERS (id, name) VALUES (?,?)", [3,"paul"]);
+
+
+	});
+
+	db.readTransaction(function(tx){
+    showCustomers(tx);
+	});
+	 
+	function showCustomers(tx)
+	{
+	    var table="",row="";
+	    var i;
+	    tx.executeSql("SELECT * FROM CUSTOMERS", [], function (tx1, results) {
+	 
+	    for (i=0;i < results.rows.length; i++){
+	        var customer=results.rows.item(i);
+	        row="<td>"+customer.id+"</td>";
+	        row+="<td>"+customer.name+"</td>";
+	 
+	        table+="<tr>"+row+"</tr>";
+	    }
+	    table="<table border='1'><th>Id</th><th>Name</th><tbody>"+table+"</tbody></table>";
+	 
+	    document.write(table);
+	    }, null);
+	}
+</script>
+
+</body>
+</html>
